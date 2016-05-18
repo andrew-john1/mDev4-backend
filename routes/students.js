@@ -144,9 +144,9 @@ router.get('/:id', function (req, res) {
                                 break;
                             case "start_year":
                                 group.start_year = row.value;
-                                break;
+                                break
                             case "sex":
-                                group.sex = row.valueOf();
+                                group.sex = row.value;
                                 resultTotal.push(group);
                                 break;
                             default:
