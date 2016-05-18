@@ -39,7 +39,7 @@ app.use('/groups', groups);
 app.use('/users', users);
 app.use('/students', students);
 app.use('/announcements', announcements);
-app.use('/student_group', settings);
+app.use('/settings', settings);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
