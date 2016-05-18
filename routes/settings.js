@@ -19,21 +19,46 @@ router.get('/', function(req, res) {
 	var TYPES = require('tedious').TYPES;
 
 	function executeStatement() {
-	    request = new Request("SELECT * FROM [LVS].[Student_Group]", function(err) {
+	    request = new Request("SELECT * FROM [LVS].[UserSettings]", function(err) {
 	        if (err) {
 	            console.log("err: " + err);}
 	    });
 
-	    var promise = new Promise(function(resolve, reject) {
+	    var resultTotal = [];
 
+	    var promise = new Promise(function(resolve, reject) {
+			
 	    	request.on('row', function(columns) {
 
-		        var result = columns
-			    	.map(function(row) {
-			    		return row;
+	    		var group = {};
+
+		        columns
+		        	.map(function(row) {
+
+		        		switch(row.metadata.colName) {
+						    case "id":
+						        group.id = row.value;
+						        break;
+						    case "username":
+						        group.username = row.value;
+						        break;
+					        case "refresh_rate":
+						        group.refresh_rate = row.value;
+						        break;
+					        case "home_url":
+						        group.home_url = row.value;
+						        break;
+					        case "selected_theme":
+						        group.selected_theme = row.value;
+						        resultTotal.push(group);
+						        break;
+						    default:
+						        group.error = row.value;
+						}
+		        		
 			    	});
 
-		    	resolve(result);	
+		    	resolve(resultTotal);	
 		    });
 
 	    });

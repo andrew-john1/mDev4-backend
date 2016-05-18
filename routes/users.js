@@ -24,16 +24,47 @@ router.get('/', function(req, res) {
 	            console.log("err: " + err);}
 	    });
 
-	    var promise = new Promise(function(resolve, reject) {
+	    var resultTotal = [];
 
+	    var promise = new Promise(function(resolve, reject) {
+			
 	    	request.on('row', function(columns) {
 
-		        var result = columns
-			    	.map(function(row) {
-			    		return row;
+	    		var group = {};
+
+		        columns
+		        	.map(function(row) {
+
+		        		switch(row.metadata.colName) {
+						    case "id":
+						        group.id = row.value;
+						        break;
+						    case "uesrname":
+						        group.uesrname = row.value;
+						        break;
+					        case "password":
+						        group.password = row.value;
+						        break;
+					        case "email":
+						        group.email = row.value;
+						        break;
+					        case "phone":
+						        group.phone = row.value;
+						        break;
+					        case "first_name":
+						        group.first_name = row.value;
+						        break;
+					        case "last_name":
+						        group.last_name = row.value;
+						        resultTotal.push(group);
+						        break;
+						    default:
+						        group.error = row.value;
+						}
+		        		
 			    	});
 
-		    	resolve(result);	
+		    	resolve(resultTotal);	
 		    });
 
 	    });
