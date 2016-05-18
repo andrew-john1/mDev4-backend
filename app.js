@@ -9,6 +9,10 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var groups = require('./routes/groups');
+var users = require('./routes/users');
+var students = require('./routes/students');
+var announcements = require('./routes/announcements');
+var student_group = require('./routes/student_group');
 
 var app = express();
 
@@ -32,6 +36,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/groups', groups);
+app.use('/users', users);
+app.use('/students', students);
+app.use('/announcements', announcements);
+app.use('/student_group', student_group);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
