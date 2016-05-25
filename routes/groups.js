@@ -90,7 +90,10 @@ router.get('/:id', function(req, res) {
 	var TYPES = require('tedious').TYPES;
 
 	function executeStatement() {
-	    request = new Request(`SELECT * FROM [LVS].[Group] AS groupInfo WHERE groupInfo.id = ${id}`, function(err) {
+	    request = new Request(`SELECT [Student].* 
+	    							FROM [LVS].[Student] 
+	    							LEFT JOIN [LVS].[Student_Group] ON [LVS].[Student].id = [LVS].[Student_Group].student_id
+	    							WHERE [LVS].[Student_Group].group_id = ${id}`, function(err) {
 	        if (err) {
 	            console.log("err: " + err);}
 	    });
@@ -101,30 +104,42 @@ router.get('/:id', function(req, res) {
 			
 	    	request.on('row', function(columns) {
 
-	    		var group = {};
+	    		var student = {};
 
 		        columns
 		        	.map(function(row) {
 
 		        		switch(row.metadata.colName) {
 						    case "id":
-						        group.id = row.value;
+						        student.id = row.value;
 						        break;
-						    case "name":
-						        group.name = row.value;
+						    case "student_code":
+						        student.student_code = row.value;
 						        break;
-					        case "current_academic_year":
-						        group.current_academic_year = row.value;
+					        case "particulars":
+						        student.particulars = row.value;
 						        break;
-					        case "current_year_of_study":
-						        group.current_year_of_study = row.value;
+					        case "birth_date":
+						        student.birth_date = row.value;
 						        break;
-					        case "start_year":
-						        group.start_year = row.value;
-						        resultTotal.push(group);
+					        case "first_name":
+						        student.first_name = row.value;
+						        break;
+					        case "middle_name":
+					        	student.middle_name = row.value;
+					        	break;
+				        	case "last_name":
+				        		student.last_name = row.value;
+				        		break;
+			        		case "start_year":
+			        			student.start_year = row.value;
+			        			break;
+		        			case "sex":
+		        				student.sex = row.value;
+						        resultTotal.push(student);
 						        break;
 						    default:
-						        group.error = row.value;
+						        student.error = row.value;
 						}
 		        		
 			    	});
