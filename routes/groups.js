@@ -90,7 +90,11 @@ router.get('/:id', function(req, res) {
 	var TYPES = require('tedious').TYPES;
 
 	function executeStatement() {
-	    request = new Request(`SELECT [Student].* 
+	    request = new Request(`SELECT [Group].*
+									FROM [LVS].[Group]
+									WHERE [LVS].[Group].id = ${id}
+
+	    						SELECT [Student].* 
 	    							FROM [LVS].[Student] 
 	    							LEFT JOIN [LVS].[Student_Group] ON [LVS].[Student].id = [LVS].[Student_Group].student_id
 	    							WHERE [LVS].[Student_Group].group_id = ${id}`, function(err) {
@@ -104,15 +108,26 @@ router.get('/:id', function(req, res) {
 			
 	    	request.on('row', function(columns) {
 
+	    		var group = {};
 	    		var student = {};
 
 		        columns
 		        	.map(function(row) {
 
 		        		switch(row.metadata.colName) {
-						    case "id":
-						        student.id = row.value;
+						    case "name":
+						        group.name = row.value;
 						        break;
+					        case "current_academic_year":
+						        group.current_academic_year = row.value;
+						        break;
+					        case "current_year_of_study":
+						        group.current_year_of_study = row.value;
+						        break;
+					        case "start_year":
+						        group.start_year = row.value;
+						        break;
+						        
 						    case "student_code":
 						        student.student_code = row.value;
 						        break;
@@ -150,7 +165,7 @@ router.get('/:id', function(req, res) {
 	    });
 
 	    promise.then(function(result) {
-	    	res.send(result);
+	    	res.json(result);
 	    })
 	   
 	    request.on('done', function(rowCount, more) {
