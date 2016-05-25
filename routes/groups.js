@@ -115,6 +115,8 @@ router.get('/:id', function(req, res) {
 		        	.map(function(row) {
 
 		        		switch(row.metadata.colName) {
+		        			case "id":
+		        				group.id = row.value;
 						    case "name":
 						        group.name = row.value;
 						        break;
@@ -126,8 +128,11 @@ router.get('/:id', function(req, res) {
 						        break;
 					        case "start_year":
 						        group.start_year = row.value;
+						        resultTotal.push(group);
 						        break;
-						        
+				        	
+				        	case "id": 
+				        		student.id = row.value;
 						    case "student_code":
 						        student.student_code = row.value;
 						        break;
