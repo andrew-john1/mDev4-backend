@@ -40,7 +40,7 @@ router.get('/', function(req, res) {
 						        user.id = row.value;
 						        break;
 						    case "username":
-						        user.uesrname = row.value;
+						        user.username = row.value;
 						        break;
 					        case "password":
 						        user.password = row.value;
