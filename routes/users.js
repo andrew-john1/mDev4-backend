@@ -45,6 +45,9 @@ router.get('/', function(req, res) {
 					        case "password":
 						        user.password = row.value;
 						        break;
+					        case "clearance":
+						        user.clearance = row.value;
+						        break;
 					        case "email":
 						        user.email = row.value;
 						        break;
