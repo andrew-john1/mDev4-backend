@@ -30,36 +30,39 @@ router.get('/', function(req, res) {
 			
 	    	request.on('row', function(columns) {
 
-	    		var group = {};
+	    		var user = {};
 
 		        columns
 		        	.map(function(row) {
 
 		        		switch(row.metadata.colName) {
 						    case "id":
-						        group.id = row.value;
+						        user.id = row.value;
 						        break;
-						    case "uesrname":
-						        group.uesrname = row.value;
+						    case "username":
+						        user.uesrname = row.value;
 						        break;
 					        case "password":
-						        group.password = row.value;
+						        user.password = row.value;
 						        break;
 					        case "email":
-						        group.email = row.value;
+						        user.email = row.value;
 						        break;
 					        case "phone":
-						        group.phone = row.value;
+						        user.phone = row.value;
 						        break;
 					        case "first_name":
-						        group.first_name = row.value;
+						        user.first_name = row.value;
 						        break;
 					        case "last_name":
-						        group.last_name = row.value;
-						        resultTotal.push(group);
+						        user.last_name = row.value;
+						        break;
+					        case "sex":
+						        user.sex = row.value;
+						        resultTotal.push(user);
 						        break;
 						    default:
-						        group.error = row.value;
+						        user.error = row.value;
 						}
 		        		
 			    	});
