@@ -77,7 +77,7 @@ router.get('/', function (req, res) {
         });
 
         promise.then(function (result) {
-            res.send(result);
+            res.json(result);
         })
 
         request.on('done', function (rowCount, more) {
@@ -161,7 +161,7 @@ router.get('/:id', function (req, res) {
         });
 
         promise.then(function (result) {
-            res.send(result);
+            res.json(result);
         })
 
         request.on('done', function (rowCount, more) {
