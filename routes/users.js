@@ -250,4 +250,45 @@ router.post('/login', function(req, res) {
     }
 });
 
+router.post('/create', function(req, res) {
+    var data = {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        phone: req.body.phone,
+        first_name: req.first_name,
+        last_name: req.last_name,
+        sex: req.sex
+    };
+
+    // connect database
+    var connection = new Connection(config);
+    connection.on('connect', function(err) {
+        // If no error, then good to proceed.
+        console.log("Connected");
+        executeStatement();
+    });
+
+    // execute a query
+    var Request = require('tedious').Request;
+    var TYPES = require('tedious').TYPES;
+
+    function executeStatement() {
+        request = new Request(`INSERT INTO [LVS].[User] ([username], [password], [email], [phone], [first_name], [last_name], [sex]) VALUES ('${data.username}', '${data.password}', '${data.email}', '${data.phone}', '${data.first_name}', '${data.last_name}',
+	 '${data.sex}');`, function(err) {
+            if (err) {
+                console.log("err: " + err);
+                res.json({error: err});
+            } else {
+                    res.json({error: "User created successfully!"})
+                }
+        });
+       
+        request.on('done', function(rowCount, more) {
+            console.log(rowCount + ' rows returned');
+        });
+        connection.execSql(request);
+    }
+});
+
 module.exports = router;
