@@ -21,7 +21,8 @@ router.get('/', function(req, res) {
     function executeStatement() {
         request = new Request("SELECT * FROM [LVS].[User]", function(err) {
             if (err) {
-                console.log("err: " + err);}
+                console.log("err: " + err);
+            }
         });
 
         var resultTotal = [];
@@ -249,13 +250,14 @@ router.post('/login', function(req, res) {
 
 router.post('/create', function(req, res) {
     var data = {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        phone: req.body.phone,
-        first_name: req.first_name,
-        last_name: req.last_name,
-        sex: req.sex
+        student_code: req.body.student_code,
+        particulars: req.body.particulars,
+        birth_date: req.body.birth_date,
+        first_name: req.body.first_name,
+        middle_name: req.body.middle_name,
+        last_name: req.body.last_name,
+        start_year: req.body.start_year,
+        sex: req.body.sex
     };
 
     // connect database
@@ -271,14 +273,15 @@ router.post('/create', function(req, res) {
     var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
-        request = new Request(`INSERT INTO [LVS].[User] ([username], [password], [email], [phone], [first_name], [last_name], [sex]) VALUES ('${data.username}', '${data.password}', '${data.email}', '${data.phone}', '${data.first_name}', '${data.last_name}',
-	 '${data.sex}');`, function(err) {
+        request = new Request(`INSERT INTO [LVS].[Student] ([student_code], [particulars], [birth_date], [first_name], [middle_name], [last_name], [start_year], [sex])
+VALUES ('${data.student_code}', '${data.particulars}', '${data.birth_date}', '${data.first_name}', '${data.middle_name}', '${data.last_name}', ${data.start_year}, '${data.sex}');`, function(err) {
             if (err) {
                 console.log("err: " + err);
                 res.json({error: err});
             } else {
-                    res.json({error: "User created successfully!"})
-                }
+                res.json({success: "Student created successfully!"});
+                console.log("Student created successfully!");
+            }
         });
        
         request.on('done', function(rowCount, more) {
