@@ -109,8 +109,6 @@ router.get('/:id', function (req, res) {
             }
         });
 
-        var resultTotal = [];
-
         var promise = new Promise(function (resolve, reject) {
 
             request.on('row', function (columns) {
@@ -147,7 +145,6 @@ router.get('/:id', function (req, res) {
                                 break
                             case "sex":
                                 group.sex = row.value;
-                                resultTotal.push(group);
                                 break;
                             default:
                                 group.error = row.value;
@@ -155,7 +152,7 @@ router.get('/:id', function (req, res) {
 
                     });
 
-                resolve(resultTotal);
+                resolve(group);
             });
 
         });
