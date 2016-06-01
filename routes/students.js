@@ -123,6 +123,7 @@ router.get('/:id', function (req, res) {
         var promise = new Promise(function (resolve, reject) {
 
             var totalResult = [];
+            var tests = [];
 
             request.on('row', function (columns) {
 
@@ -176,13 +177,15 @@ router.get('/:id', function (req, res) {
                                 break;
                             case "grade":
                                 test.grade = row.value;
-                                totalResult.push(test);
+                                tests.push(test);
                                 break;
                             default:
                                 student.error = row.value;
                         }
 
                     });
+
+                totalResult.push(tests);
 
                 resolve(totalResult);
             });
