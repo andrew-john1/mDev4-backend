@@ -107,8 +107,6 @@ router.get('/:id', function(req, res) {
                 console.log("err: " + err);}
         });
 
-        var resultTotal = [];
-
         var promise = new Promise(function(resolve, reject) {
             
             request.on('row', function(columns) {
@@ -139,7 +137,6 @@ router.get('/:id', function(req, res) {
                                 break;
                             case "last_name":
                                 user.last_name = row.value;
-                                resultTotal.push(user);
                                 break;
                             default:
                                 user.error = row.value;
@@ -147,7 +144,7 @@ router.get('/:id', function(req, res) {
                         
                     });
 
-                resolve(resultTotal);   
+                resolve(user);   
             });
 
         });
