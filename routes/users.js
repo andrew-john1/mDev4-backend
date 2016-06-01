@@ -16,10 +16,10 @@ router.get('/', function(req, res) {
 
     // execute a query
     var Request = require('tedious').Request;
-    var TYPES = require('tedious').TYPES;
+//    var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
-        request = new Request("SELECT * FROM [LVS].[User]", function(err) {
+        request = new Request("SELECT * FROM [LVS].[User] ", function(err) {
             if (err) {
                 console.log("err: " + err);
             }
@@ -100,7 +100,6 @@ router.get('/:id', function(req, res) {
 
     // execute a query
     var Request = require('tedious').Request;
-    var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
         request = new Request(`SELECT * FROM [LVS].[User] AS userInfo WHERE userInfo.id = ${id}`, function(err) {
@@ -177,12 +176,12 @@ router.post('/login', function(req, res) {
 
     // execute a query
     var Request = require('tedious').Request;
-    var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
-        request = new Request(`SELECT * FROM [LVS].[User] AS userInfo WHERE userInfo.username = '${data.username}'`, function(err) {
+        request = new Request(`SELECT * FROM [LVS].[User] WHERE [username] = '${data.username}' AND [active] = 1`, function(err) {
             if (err) {
                 console.log("err: " + err);}
+                res.send("error:" + err);
         });
 
         var promise = new Promise(function(resolve, reject) {
@@ -250,15 +249,17 @@ router.post('/login', function(req, res) {
 
 router.post('/create', function(req, res) {
     var data = {
-        student_code: req.body.student_code,
-        particulars: req.body.particulars,
-        birth_date: req.body.birth_date,
+        username: req.body.username,
+        password: req.body.password,
+//        clearance: req.clearance,
+        email: req.body.email,
+        phone: req.body.phone,
         first_name: req.body.first_name,
-        middle_name: req.body.middle_name,
         last_name: req.body.last_name,
-        start_year: req.body.start_year,
         sex: req.body.sex
     };
+
+    console.log(data);
 
     // connect database
     var connection = new Connection(config);
@@ -270,17 +271,48 @@ router.post('/create', function(req, res) {
 
     // execute a query
     var Request = require('tedious').Request;
-    var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
-        request = new Request(`INSERT INTO [LVS].[Student] ([student_code], [particulars], [birth_date], [first_name], [middle_name], [last_name], [start_year], [sex])
-VALUES ('${data.student_code}', '${data.particulars}', '${data.birth_date}', '${data.first_name}', '${data.middle_name}', '${data.last_name}', ${data.start_year}, '${data.sex}');`, function(err) {
+        request = new Request(`INSERT INTO [LVS].[User] ([username], [password], [email], [phone], [first_name], [last_name], [sex]) VALUES ('${data.username}', '${data.password}', '${data.email}', '${data.phone}', '${data.first_name}', '${data.last_name}',
+	 '${data.sex}');`, function(err) {
             if (err) {
                 console.log("err: " + err);
                 res.json({error: err});
             } else {
-                res.json({success: "Student created successfully!"});
-                console.log("Student created successfully!");
+                res.json({success: "User created successfully!"});
+                console.log("User created successfully!");
+                }
+        });
+       
+        request.on('done', function(rowCount, more) {
+            console.log(rowCount + ' rows returned');
+        });
+        connection.execSql(request);
+    }
+});
+
+router.post('/deactivate', function(req, res) {
+    var id = req.body.id;
+
+    // connect database
+    var connection = new Connection(config);
+    connection.on('connect', function(err) {
+        // If no error, then good to proceed.
+        console.log("Connected");
+        executeStatement();
+    });
+
+    // execute a query
+    var Request = require('tedious').Request;
+
+    function executeStatement() {
+        request = new Request(`UPDATE [LVS].[User] SET [active] = 0 WHERE id = '${id}';`, function(err) {
+            if (err) {
+                console.log("err: " + err);
+                res.json({error: err});
+            } else {
+                res.json({success: "User deactivated successfully!"});
+                console.log("User deactivated successfully!");
             }
         });
        
