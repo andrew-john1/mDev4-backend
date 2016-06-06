@@ -16,7 +16,6 @@ router.get('/', function(req, res) {
 
     // execute a query
     var Request = require('tedious').Request;
-//    var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
         request = new Request("SELECT * FROM [LVS].[User] ", function(err) {
@@ -128,38 +127,40 @@ router.post('/login', function(req, res) {
     function executeStatement() {
         request = new Request(`SELECT * FROM [LVS].[User] WHERE [LVS].[User].username = '${data.username}'`, function(err) {
 
-        var promise = new Promise(function(resolve, reject) {
-            
-            request.on('row', function(columns) {
+            var promise = new Promise(function(resolve, reject) {
+                
+                request.on('row', function(columns) {
 
-                var user = {};
+                    var user = {};
 
-                columns
-                    .forEach(function(row) {
+                    columns
+                        .forEach(function(row) {
 
-                        user[row.metadata.colName] = row.value;
+                            user[row.metadata.colName] = row.value;
 
-                    });
+                        });
 
-                resolve(user);  
+                    resolve(user);  
+                });
+
             });
 
+            promise.then(function(user) {
+                if (data.password === user.password) {
+                    res.json(user);
+                } else {
+                    res.json({error: "Login failed"});
+                }
+            });
+           
+            request.on('done', function(rowCount, more) {
+                console.log(rowCount + ' rows returned');
+            });
+            connection.execSql(request);
         });
-
-        promise.then(function(user) {
-            if (data.password === user.password) {
-                res.json(user);
-            } else {
-                res.json({error: "Login failed"});
-            }
-        });
-       
-        request.on('done', function(rowCount, more) {
-            console.log(rowCount + ' rows returned');
-        });
-        connection.execSql(request);
-    }
+    };
 });
+
 
 router.post('/create', function(req, res) {
     var data = {
@@ -172,8 +173,6 @@ router.post('/create', function(req, res) {
         last_name: req.body.last_name,
         sex: req.body.sex
     };
-
-    console.log(data);
 
     // connect database
     var connection = new Connection(config);
