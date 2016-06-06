@@ -33,28 +33,10 @@ router.get('/', function(req, res) {
 	    		var group = {};
 
 		        columns
-		        	.map(function(row) {
+		        	.forEach(function(row) {
 
-		        		switch(row.metadata.colName) {
-						    case "id":
-						        group.id = row.value;
-						        break;
-						    case "name":
-						        group.name = row.value;
-						        break;
-					        case "current_academic_year":
-						        group.current_academic_year = row.value;
-						        break;
-					        case "current_year_of_study":
-						        group.current_year_of_study = row.value;
-						        break;
-					        case "start_year":
-						        group.start_year = row.value;
-						        resultTotal.push(group);
-						        break;
-						    default:
-						        group.error = row.value;
-						}
+		        		group[row.metadata.colName] = row.value;
+		        		resultTotal.push(group);
 		        		
 			    	});
 
@@ -114,7 +96,7 @@ router.get('/:id', function(req, res) {
 	    		var student = {};
 
 		        columns
-		        	.map(function(row) {
+		        	.forEach(function(row) {
 		        		console.log(row);
 
 		        		switch(row.metadata.colName) {

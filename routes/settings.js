@@ -30,31 +30,14 @@ router.get('/', function(req, res) {
 			
 	    	request.on('row', function(columns) {
 
-	    		var group = {};
+	    		var setting = {};
 
 		        columns
-		        	.map(function(row) {
+		        	.forEach(function(row) {
 
-		        		switch(row.metadata.colName) {
-						    case "id":
-						        group.id = row.value;
-						        break;
-						    case "username":
-						        group.username = row.value;
-						        break;
-					        case "refresh_rate":
-						        group.refresh_rate = row.value;
-						        break;
-					        case "home_url":
-						        group.home_url = row.value;
-						        break;
-					        case "selected_theme":
-						        group.selected_theme = row.value;
-						        resultTotal.push(group);
-						        break;
-						    default:
-						        group.error = row.value;
-						}
+		        		setting[row.metadata.colName] = row.value;
+		        		if (setting.id === row.value)
+                            resultTotal.push(setting);
 		        		
 			    	});
 
@@ -101,40 +84,14 @@ router.get('/:id', function(req, res) {
 			
 	    	request.on('row', function(columns) {
 
-	    		var group = {};
+	    		var setting = {};
 
 		        columns
-		        	.map(function(row) {
+		        	.forEach(function(row) {
 
-		        		switch(row.metadata.colName) {
-						    case "id":
-						        group.id = row.value;
-						        break;
-						    case "student_code":
-						        group.student_code = row.value;
-						        break;
-					        case "particulars":
-						        group.particulars = row.value;
-						        break;
-					        case "birth_date":
-						        group.birth_date = row.value;
-						        break;
-					        case "first_name":
-						        group.first_name = row.value;
-						        break;
-					        case "middle_name":
-						        group.middle_name = row.value;
-						        break;
-					        case "last_name":
-						        group.last_name = row.value;
-						        break;
-					        case "start_year":
-						        group.start_year = row.value;
-						        resultTotal.push(group);
-						        break;
-						    default:
-						        group.error = row.value;
-						}
+		        		setting[row.metadata.colName] = row.value;
+		        		if (setting.id === row.value)
+                            resultTotal.push(setting);
 		        		
 			    	});
 

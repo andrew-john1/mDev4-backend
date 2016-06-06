@@ -31,43 +31,14 @@ router.get('/', function (req, res) {
 
             request.on('row', function (columns) {
 
-                var group = {};
+                var student = {};
 
                 columns
-                    .map(function (row) {
+                    .forEach(function (row) {
 
-                        switch (row.metadata.colName) {
-                            case "id":
-                                group.id = row.value;
-                                break;
-                            case "student_code":
-                                group.student_code = row.value;
-                                break;
-                            case "particulars":
-                                group.particulars = row.value;
-                                break;
-                            case "birth_date":
-                                group.birth_date = row.value;
-                                break;
-                            case "first_name":
-                                group.first_name = row.value;
-                                break;
-                            case "middle_name":
-                                group.middle_name = row.value;
-                                break;
-                            case "last_name":
-                                group.last_name = row.value;
-                                break;
-                            case "start_year":
-                                group.start_year = row.value;
-                                break;
-                            case "sex":
-                                group.sex = row.value;
-                                resultTotal.push(group);
-                                break;
-                            default:
-                                group.error = row.value;
-                        }
+                        student[row.metadata.colName] = row.value;
+                        if (student.id === row.value)
+                            resultTotal.push(student);
 
                     });
 
@@ -107,14 +78,21 @@ router.get('/:id', function (req, res) {
                                     [LVS].[Student].particulars, [LVS].[Student].birth_date,
                                     [LVS].[Student].first_name, [LVS].[Student].middle_name,
                                     [LVS].[Student].last_name, [LVS].[Student].start_year,
-                                    [LVS].[Student].sex,
-                                    [LVS].[Test].id AS test_id, [LVS].[Test].date, [LVS].[Test].title,
-                                    [LVS].[Test].description,
-                                    [LVS].[Student_Test].grade
+                                    [LVS].[Student].sex
                                 FROM [LVS].[Student]
-                                LEFT JOIN [LVS].[Student_Test] ON [LVS].[Student].id = [LVS].[Student_Test].student_id
-                                LEFT JOIN [LVS].[Test] ON [LVS].[Test].id = [LVS].[Student_Test].test_id
-                                WHERE [LVS].[Student].id = ${id}`, function (err) {
+                                WHERE [LVS].[Student].id = ${id}
+
+                                SELECT [LVS].[Test].id AS test_id, [LVS].[Test].date, [LVS].[Test].title,
+                                            [LVS].[Test].description, [LVS].[Student_Test].grade,
+                                    (
+                                        SELECT Count(*)
+                                        FROM [LVS].[Student_Test]
+                                        WHERE [LVS].[Student_Test].student_id = ${id}
+                                    ) AS test_count
+                                        FROM [LVS].[Student]
+                                        LEFT JOIN [LVS].[Student_Test] ON [LVS].[Student].id = [LVS].[Student_Test].student_id
+                                        LEFT JOIN [LVS].[Test] ON [LVS].[Test].id = [LVS].[Student_Test].test_id
+                                        WHERE [LVS].[Student].id = ${id}`, function (err) {
             if (err) {
                 console.log("err: " + err);
             }
@@ -126,14 +104,19 @@ router.get('/:id', function (req, res) {
             var tests = [];
 
             request.on('row', function (columns) {
+                var amountTest;
 
                 var student = {};
                 var test = {};
 
                 columns
-                    .map(function (row) {
+                    .forEach(function (row) {
 
                         switch (row.metadata.colName) {
+                            case "test_count":
+                                amountTest = row.value;
+                                break;
+
                             case "student_id":
                                 student.id = row.value;
                                 break;
@@ -184,8 +167,10 @@ router.get('/:id', function (req, res) {
                         }
 
                     });
-
-                totalResult.push(tests);
+            
+                if (tests.length === amountTest) {
+                    totalResult.push(tests);
+                }
 
                 resolve(totalResult);
             });

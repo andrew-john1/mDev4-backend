@@ -34,40 +34,11 @@ router.get('/', function(req, res) {
                 var user = {};
 
                 columns
-                    .map(function(row) {
+                    .forEach(function(row) {
 
-                        switch(row.metadata.colName) {
-                            case "id":
-                                user.id = row.value;
-                                break;
-                            case "username":
-                                user.username = row.value;
-                                break;
-                            case "password":
-                                user.password = row.value;
-                                break;
-                            case "clearance":
-                                user.clearance = row.value;
-                                break;
-                            case "email":
-                                user.email = row.value;
-                                break;
-                            case "phone":
-                                user.phone = row.value;
-                                break;
-                            case "first_name":
-                                user.first_name = row.value;
-                                break;
-                            case "last_name":
-                                user.last_name = row.value;
-                                break;
-                            case "sex":
-                                user.sex = row.value;
-                                resultTotal.push(user);
-                                break;
-                            default:
-                                user.error = row.value;
-                        }
+                        user[row.metadata.colName] = row.value;
+                        if (user.id === row.value)
+                            resultTotal.push(user);
                         
                     });
 
@@ -115,33 +86,9 @@ router.get('/:id', function(req, res) {
                 var user = {};
 
                 columns
-                    .map(function(row) {
+                    .forEach(function(row) {
 
-                        switch(row.metadata.colName) {
-                            case "id":
-                                user.id = row.value;
-                                break;
-                            case "uesrname":
-                                user.uesrname = row.value;
-                                break;
-                            case "password":
-                                user.password = row.value;
-                                break;
-                            case "email":
-                                user.email = row.value;
-                                break;
-                            case "phone":
-                                user.phone = row.value;
-                                break;
-                            case "first_name":
-                                user.first_name = row.value;
-                                break;
-                            case "last_name":
-                                user.last_name = row.value;
-                                break;
-                            default:
-                                user.error = row.value;
-                        }
+                        user[row.metadata.colName] = row.value;
                         
                     });
 
@@ -180,7 +127,7 @@ router.post('/login', function(req, res) {
     var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
-        request = new Request(`SELECT * FROM [LVS].[User] AS userInfo WHERE userInfo.username = '${data.username}'`, function(err) {
+        request = new Request(`SELECT * FROM [LVS].[User] WHERE [LVS].[User].username = '${data.username}'`, function(err) {
             if (err) {
                 console.log("err: " + err);}
         });
@@ -192,39 +139,9 @@ router.post('/login', function(req, res) {
                 var user = {};
 
                 columns
-                    .map(function(row) {
+                    .forEach(function(row) {
 
-                        switch(row.metadata.colName) {
-                            case "id":
-                                user.id = row.value;
-                                break;
-                            case "username":
-                                user.username = row.value;
-                                break;
-                            case "password":
-                                user.password = row.value;
-                                break;
-                            case "clearance":
-                                user.clearance = row.value;
-                                break;
-                            case "email":
-                                user.email = row.value;
-                                break;
-                            case "phone":
-                                user.phone = row.value;
-                                break;
-                            case "first_name":
-                                user.first_name = row.value;
-                                break;
-                            case "last_name":
-                                user.last_name = row.value;
-                                break;
-                            case "sex":
-                                user.sex = row.value;
-                                break;
-                            default:
-                                user.error = row.value;
-                        }
+                        user[row.metadata.colName] = row.value;
 
                     });
 

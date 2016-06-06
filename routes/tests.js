@@ -33,25 +33,11 @@ router.get('/', function(req, res) {
                 var test = {};
 
                 columns
-                    .map(function(row) {
+                    .forEach(function(row) {
 
-                        switch(row.metadata.colName) {
-                            case "id":
-                                test.id = row.value;
-                                break;
-                            case "date":
-                                test.date = row.value;
-                                break;
-                            case "title":
-                                test.title = row.value;
-                                break;
-                            case "description":
-                                test.description = row.value;
-                                resultTotal.push(test);
-                                break;
-                            default:
-                                test.error = row.value;
-                        }
+                        test[row.metadata.colName] = row.value;
+                        if (test.id === row.value)
+                            resultTotal.push(test);
                         
                     });
 

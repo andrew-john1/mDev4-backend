@@ -38,32 +38,9 @@ router.get('/', function(req, res) {
 		        columns
 		        	.map(function(row) {
 
-		        		switch(row.metadata.colName) {
-						    case "id":
-						        announcement.id = row.value;
-						        break;
-						    case "message":
-						        announcement.message = row.value;
-						        break;
-					        case "author":
-						        announcement.author = row.value;
-						        break;
-					        case "title":
-						        announcement.title = row.value;
-						        break;
-					        case "type":
-						        announcement.type = row.value;
-						        break;
-					        case "first_name":
-					        	announcement.first_name = row.value;
-					        	break;
-				        	case "last_name":
-				        		announcement.last_name = row.value;
-						        resultTotal.push(announcement);
-						        break;
-						    default:
-						        announcement.error = row.value;
-						}
+		        		announcement[row.metadata.colName] = row.value;
+		        		if (announcement.id === row.value)
+                            resultTotal.push(announcement);
 		        		
 			    	});
 
@@ -115,26 +92,7 @@ router.get('/:id', function(req, res) {
 		        columns
 		        	.map(function(row) {
 
-		        		switch(row.metadata.colName) {
-						    case "id":
-						        group.id = row.value;
-						        break;
-						    case "message":
-						        group.message = row.value;
-						        break;
-					        case "author":
-						        group.author = row.value;
-						        break;
-					        case "title":
-						        group.title = row.value;
-						        break;
-					        case "type":
-						        group.type = row.value;
-						        resultTotal.push(group);
-						        break;
-						    default:
-						        group.error = row.value;
-						}
+		        		announcement[row.metadata.colName] = row.value;
 		        		
 			    	});
 
