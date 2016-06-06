@@ -39,8 +39,9 @@ router.get('/', function(req, res) {
 		        	.map(function(row) {
 
 		        		announcement[row.metadata.colName] = row.value;
-		        		if (announcement.id === row.value)
+		        		if (announcement.id === row.value) {
                             resultTotal.push(announcement);
+		        		}
 		        		
 			    	});
 
@@ -93,6 +94,9 @@ router.get('/:id', function(req, res) {
 		        	.map(function(row) {
 
 		        		announcement[row.metadata.colName] = row.value;
+		        		if (announcement.id === row.value) {
+                            resultTotal.push(announcement);
+		        		}
 		        		
 			    	});
 

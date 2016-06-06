@@ -36,8 +36,9 @@ router.get('/', function(req, res) {
                     .forEach(function(row) {
 
                         test[row.metadata.colName] = row.value;
-                        if (test.id === row.value)
+                        if (test.id === row.value) {
                             resultTotal.push(test);
+                        }
                         
                     });
 

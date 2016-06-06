@@ -36,8 +36,9 @@ router.get('/', function(req, res) {
 		        	.forEach(function(row) {
 
 		        		setting[row.metadata.colName] = row.value;
-		        		if (setting.id === row.value)
+		        		if (setting.id === row.value) {
                             resultTotal.push(setting);
+		        		}
 		        		
 			    	});
 
@@ -90,8 +91,9 @@ router.get('/:id', function(req, res) {
 		        	.forEach(function(row) {
 
 		        		setting[row.metadata.colName] = row.value;
-		        		if (setting.id === row.value)
+		        		if (setting.id === row.value) {
                             resultTotal.push(setting);
+		        		}
 		        		
 			    	});
 
