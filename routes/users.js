@@ -123,41 +123,44 @@ router.post('/login', function(req, res) {
 
     // execute a query
     var Request = require('tedious').Request;
+    var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
         request = new Request(`SELECT * FROM [LVS].[User] WHERE [LVS].[User].username = '${data.username}'`, function(err) {
-
-            var promise = new Promise(function(resolve, reject) {
-                
-                request.on('row', function(columns) {
-
-                    var user = {};
-
-                    columns
-                        .forEach(function(row) {
-
-                            user[row.metadata.colName] = row.value;
-
-                        });
-
-                    resolve(user);  
-                });
-
-            });
-
-            promise.then(function(user) {
-                if (data.password === user.password) {
-                    res.json(user);
-                } else {
-                    res.json({error: "Login failed"});
-                }
-            });
-           
-            request.on('done', function(rowCount, more) {
-                console.log(rowCount + ' rows returned');
-            });
-            connection.execSql(request);
+            if (err) {
+                console.log("err: " + err);}
         });
+
+        var promise = new Promise(function(resolve, reject) {
+            
+            request.on('row', function(columns) {
+
+                var user = {};
+
+                columns
+                    .forEach(function(row) {
+
+                        user[row.metadata.colName] = row.value;
+
+                    });
+
+                resolve(user);  
+            });
+
+        });
+
+        promise.then(function(user) {
+            if (data.password === user.password) {
+                res.json(user);
+            } else {
+                res.json({error: "Login failed"});
+            }
+        });
+       
+        request.on('done', function(rowCount, more) {
+            console.log(rowCount + ' rows returned');
+        });
+        connection.execSql(request);
     };
 });
 
