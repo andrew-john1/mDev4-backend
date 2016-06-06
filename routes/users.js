@@ -125,15 +125,7 @@ router.post('/login', function(req, res) {
     var Request = require('tedious').Request;
 
     function executeStatement() {
-<<<<<<< HEAD
         request = new Request(`SELECT * FROM [LVS].[User] WHERE [LVS].[User].username = '${data.username}'`, function(err) {
-=======
-        request = new Request(`SELECT * FROM [LVS].[User] WHERE [username] = '${data.username}' AND [active] = 1`, function(err) {
->>>>>>> 44fd70dffae414a1d913ad7926475ce1af524260
-            if (err) {
-                console.log("err: " + err);}
-                res.send("error:" + err);
-        });
 
         var promise = new Promise(function(resolve, reject) {
             
