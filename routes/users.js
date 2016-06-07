@@ -205,11 +205,7 @@ router.post('/create', function(req, res) {
 
                 });
 
-            if (data.password === user.password) {
-                res.json(user);
-            } else {
                 res.json({error: "Login failed"});
-            }
            
         });
 
