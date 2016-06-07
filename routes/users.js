@@ -158,7 +158,7 @@ router.post('/create', function(req, res) {
     var data = {
         username: req.body.username,
         password: req.body.password,
-//        clearance: req.clearance,
+        clearance: req.body.clearance,
         email: req.body.email,
         phone: req.body.phone,
         first_name: req.body.first_name,
@@ -178,15 +178,20 @@ router.post('/create', function(req, res) {
     var Request = require('tedious').Request;
 
     function executeStatement() {
-        request = new Request(`INSERT INTO [LVS].[User] ([username], [password], [email], [phone], [first_name], [last_name], [sex]) VALUES ('${data.username}', '${data.password}', '${data.email}', '${data.phone}', '${data.first_name}', '${data.last_name}',
-	 '${data.sex}');`, function(err) {
+        request = new Request(`INSERT INTO [LVS].[User] 
+                                    ([LVS].[User].username, [LVS].[User].password, 
+                                        [LVS].[User].clearance, [LVS].[User].email, 
+                                        [LVS].[User].phone, [LVS].[User].first_name, 
+                                        [LVS].[User].last_name, [LVS].[User].sex) 
+                                VALUES ('${data.username}', '${data.password}', '${data.clearance}', '${data.email}', 
+                                        '${data.phone}', '${data.first_name}', '${data.last_name}', '${data.sex}');`, 
+                                function(err) {
             if (err) {
                 console.log("err: " + err);
                 res.json({error: err});
             } else {
-                res.json({success: "User created successfully!"});
-                console.log("User created successfully!");
-                }
+                res.json(data);
+            }
         });
        
         request.on('done', function(rowCount, more) {
