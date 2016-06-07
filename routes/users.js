@@ -83,32 +83,21 @@ router.get('/:id', function(req, res) {
             if (err) {
                 console.log("err: " + err);}
         });
-
-        var promise = new Promise(function(resolve, reject) {
             
-            request.on('row', function(columns) {
+        request.on('row', function(columns) {
 
-                var user = {};
+            var user = {};
 
-                columns
-                    .forEach(function(row) {
+            columns
+                .forEach(function(row) {
 
-                        user[row.metadata.colName] = row.value;
-                        
-                    });
+                    user[row.metadata.colName] = row.value;
+                    
+                });
 
-                resolve(user);   
-            });
-
+            res.json(user);  
         });
-
-        promise.then(function(result) {
-            res.json(result);
-        })
-       
-        request.on('done', function(rowCount, more) {
-            console.log(rowCount + ' rows returned');
-        });
+        
         connection.execSql(request);
     }
 });
@@ -132,41 +121,35 @@ router.post('/login', function(req, res) {
     var TYPES = require('tedious').TYPES;
 
     function executeStatement() {
-        request = new Request(`SELECT * FROM [LVS].[User] WHERE [LVS].[User].username = '${data.username}'`, function(err) {
+        request = new Request(`SELECT * FROM [LVS].[User] WHERE [LVS].[User].username = '${data.username}'`, function(err, rowCount) {
             if (err) {
-                console.log("err: " + err);}
+                console.log("err: " + err);
+            } if (rowCount === 0) {
+                res.json({error: "Login failed"});
+            }
         });
 
-        var promise = new Promise(function(resolve, reject) {
             
-            request.on('row', function(columns) {
+        request.on('row', function(columns) {
 
-                var user = {};
+            var user = {};
 
-                columns
-                    .forEach(function(row) {
+            columns
+                .forEach(function(row) {
 
-                        user[row.metadata.colName] = row.value;
+                    user[row.metadata.colName] = row.value;
 
-                    });
+                });
 
-                resolve(user);  
-            });
-
-        });
-
-        promise.then(function(user) {
             if (data.password === user.password) {
                 res.json(user);
             } else {
                 res.json({error: "Login failed"});
             }
+           
         });
-       
-        request.on('done', function(rowCount, more) {
-            console.log(rowCount + ' rows returned');
-        });
-        connection.execSql(request);
+
+        connection.execSql(request);       
     };
 });
 
