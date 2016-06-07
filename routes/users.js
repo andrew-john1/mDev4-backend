@@ -4,11 +4,11 @@ var router = express.Router();
 var Connection = require('tedious').Connection;
 var config = require('../config');
 
-router.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
+// router.use(function(req, res, next) {
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//     next();
+// });
 
 /* GET users listing. */
 router.get('/', function(req, res) {
