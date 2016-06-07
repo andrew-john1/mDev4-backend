@@ -184,20 +184,36 @@ router.post('/create', function(req, res) {
                                         [LVS].[User].phone, [LVS].[User].first_name, 
                                         [LVS].[User].last_name, [LVS].[User].sex) 
                                 VALUES ('${data.username}', '${data.password}', '${data.clearance}', '${data.email}', 
-                                        '${data.phone}', '${data.first_name}', '${data.last_name}', '${data.sex}');`, 
+                                        '${data.phone}', '${data.first_name}', '${data.last_name}', '${data.sex}')
+
+                                SELECT * FROM [LVS].[User] WHERE [LVS].[User].username = '${data.username}';`, 
                                 function(err) {
             if (err) {
                 console.log("err: " + err);
                 res.json({error: err});
-            } else {
-                res.json(data);
             }
         });
-       
-        request.on('done', function(rowCount, more) {
-            console.log(rowCount + ' rows returned');
+
+        request.on('row', function(columns) {
+
+            var user = {};
+
+            columns
+                .forEach(function(row) {
+
+                    user[row.metadata.colName] = row.value;
+
+                });
+
+            if (data.password === user.password) {
+                res.json(user);
+            } else {
+                res.json({error: "Login failed"});
+            }
+           
         });
-        connection.execSql(request);
+
+        connection.execSql(request);   
     }
 });
 
